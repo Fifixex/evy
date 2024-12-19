@@ -56,7 +56,7 @@ export class Client extends BaseClient {
 		this.ws.on('error', () => this.ws?.close())
 
 		this.ws.on('message', (data) => {
-			const message = JSON.parse(data)
+			const message = JSON.parse(data.toString())
 			if (message.op === 0 && message.t === 'MESSAGE_CREATE') {
 				this.emit('message', new Message(this, message.d))
 			}
