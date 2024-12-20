@@ -18,6 +18,9 @@ importers:
       '@types/node':
         specifier: ^22.10.2
         version: 22.10.2
+      discord-api-types:
+        specifier: ^0.37.112
+        version: 0.37.112
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -80,6 +83,9 @@ packages:
   '@types/node@22.10.2':
     resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
 
+  discord-api-types@0.37.112:
+    resolution: {integrity: sha512-DDEt3696k7o9+Ot2a5phqsEKnwhSGfIDzXJR9V5OMba9fbvJOEhPapLXy645RkrGCEKZeoFd3qXFhrvVQSUbxQ==}
+
   dotenv@16.4.7:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
     engines: {node: '>=12'}
@@ -139,6 +145,8 @@ snapshots:
   '@types/node@22.10.2':
     dependencies:
       undici-types: 6.20.0
+
+  discord-api-types@0.37.112: {}
 
   dotenv@16.4.7: {}
 
