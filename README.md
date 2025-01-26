@@ -2,7 +2,7 @@
   <img src="https://github.com/user-attachments/assets/4293d706-20d2-47b4-a3b1-1e207c83ab30" alt="Logo" height="190">
 </a>
 <p>
-  <sub>Minimal Discord Bot maker library.</sub>
+  <sub>Minimal Discord Self Bot library.</sub>
 </p>
   
 <p>
