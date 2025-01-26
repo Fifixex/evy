@@ -3,7 +3,7 @@ import WebSocket from 'ws'
 import { once } from 'node:events'
 import { GATEWAY_URL } from '../config.js'
 import { ImportantGatewayOpcodes } from './constants.js'
-import { GatewayOpcodes } from 'discord-api-types/v10'
+import { GatewayDispatchEvents, GatewayOpcodes } from 'discord-api-types/v10'
 
 export class WebSocketManager extends WebSocket {
 	#token = null
@@ -25,8 +25,6 @@ export class WebSocketManager extends WebSocket {
 
 		try {
 			await promise
-		} catch (error) {
-			throw error
 		} finally {
 			controller.abort()
 		}
@@ -56,7 +54,6 @@ export class WebSocketManager extends WebSocket {
 
 		await this.send({
 			op: GatewayOpcodes.Identify,
-			// eslint-disable-next-line id-length
 			d: data,
 		})
 	}
@@ -66,12 +63,70 @@ export class WebSocketManager extends WebSocket {
 		this.#token = token
 	}
 
-	destroy() {
+	async destroy() {
 		this.close()
 	}
 
+	async heartbeat(requested = false) {
+		if (!requested) return this.destroy()
+		await this.send({
+			op: GatewayOpcodes.Heartbeat,
+			d: null,
+		})
+	}
+
+	async unpackMessage(data, isBinary) {
+		if (!isBinary) {
+			try {
+				return JSON.parse(data)
+			} catch {
+				return null
+			}
+		}
+
+		return null
+	}
+
 	async onMessage(data, isBinary) {
-		console.debug(data)
+		const payload = await this.unpackMessage(data, isBinary)
+		if (!payload) return
+
+		switch (payload.op) {
+			case GatewayOpcodes.Dispatch: {
+				switch (payload.t) {
+					case GatewayDispatchEvents.Ready:
+						this.emit('ready', payload.d)
+						break
+
+					case GatewayDispatchEvents.Resumed: {
+						console.debug('Resumed!')
+						this.emit('resumed')
+						break
+					}
+					default:
+						break
+				}
+
+				this.emit('dispatch', payload)
+				break
+			}
+
+			case GatewayOpcodes.Heartbeat: {
+				await this.heartbeat(true)
+				break
+			}
+
+			case GatewayOpcodes.Reconnect: {
+				await this.destroy()
+				break
+			}
+
+			case GatewayOpcodes.InvalidSession: {
+				console.error('Invalid session!')
+				this.destroy()
+				break
+			}
+		}
 	}
 
 	async send(payload) {

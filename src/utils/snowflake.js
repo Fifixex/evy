@@ -1,5 +1,4 @@
-'use strict'
-const IncrementSymbol = Symbol('@evy/snowflake.increment')
+let IncrementSymbol = Symbol('@evy/snowflake.increment')
 
 const Epoch = 1420070400000n
 const MaximumIncrement = 0b111111111111n
